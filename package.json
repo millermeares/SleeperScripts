@@ -1,0 +1,19 @@
+{
+  "name": "sleeper-script",
+  "version": "1.0.0",
+  "main": "main.js",
+  "type": "module",
+  "devDependencies": {
+    "eslint": "8.22.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0"
+  },
+  "scripts": {
+    "quietlint": "./node_modules/.bin/eslint --quiet"
+  },
+  "dependencies": {
+    "axios": "^1.2.1",
+    "fs": "^0.0.1-security",
+    "json-stringify-safe": "^5.0.1"
+  }
+}
