@@ -5,7 +5,7 @@ import Team from './Players.js';
 import { getTeamsWithMaxPf } from "./Team.js";
 import { getLatestBanInjuriesLeagueId, leagueUrl } from './league.js';
 
-const WEEK_AMOUNT = 15
+const WEEK_AMOUNT = 14
 
 const MIN_EXPECTED_SCORERS = {
   QB: 1,

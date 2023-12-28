@@ -54,6 +54,7 @@ function removeMaxOfPositionFromScore(players, team, rosterInWeek, week, positio
   }
   console.log(`${maxPlayer.player.last_name} had most points at ${position} with ${maxPlayer.points} points ` + 
     `for team ${team.owner} in week ${week}`)
+  
   team.subtractFromMaxPf(maxPlayer.points)
 }
 
