@@ -44,7 +44,7 @@ function removeMaxOfPositionFromScore(players, team, rosterInWeek, week, positio
     }
   }
   if (!maxPlayer) {
-    console.log("Did not find any players of position " + position + " on team " + team.owner + " for week " + week)
+    console.log(`Did not find any ${position}s on team ${team.owner} for week ${week}`)
     return;
   }
   if (maxPlayer.points < 0) {
