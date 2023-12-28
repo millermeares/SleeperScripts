@@ -3,7 +3,8 @@ import playerProvider from './playerProvider.js';
 import Players from './Players.js';
 import Team from './Team.js';
 
-const leagueId = "784442047112327168";
+const leagueId = "784442047112327168"; //todo: going to need to change league ID.
+// todo: going to need to dynamically pull playersUrl based on what year this is running for.
 const leagueUrl = "https://api.sleeper.app/v1/league/" + leagueId;
 const matchUpUrl = leagueUrl + "/matchups/";
 const leagueUsersUrl = leagueUrl + "/users";
@@ -79,10 +80,6 @@ async function getUsersInLeague() {
   })
 }
 
-async function getLeague() {
-  return (await axios.get(leagueUrl)).data;
-}
-
 async function getMatchUp(week) {
   return (await axios.get(getMatchUpUrl(week))).data;
 }
@@ -90,3 +87,5 @@ async function getMatchUp(week) {
 function getMatchUpUrl(week) {
   return matchUpUrl + week;
 }
+
+removeKickerAndDefense()

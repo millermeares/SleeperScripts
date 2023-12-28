@@ -1,3 +1,1 @@
-import { removeKickerAndDefense } from "./calculateMaxPoints.js";
-
-removeKickerAndDefense();
+console.log("running maine, which is nothing")
