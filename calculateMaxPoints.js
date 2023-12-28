@@ -14,7 +14,7 @@ const playersUrl = "https://api.sleeper.app/v1/players/nfl";
 const WEEK_AMOUNT = 17;
 
 export async function removeKickerAndDefense() {
-  let players = new Players(playerProvider.getPlayers());
+  let players = new Players(await playerProvider.getPlayers());
   let teams = await getTeamsWithMaxPf();
   for (let week = 1; week <= WEEK_AMOUNT; week++) {
     let weekMatchups = await getMatchUp(week);
@@ -50,11 +50,11 @@ function removeMaxOfPositionFromScore(players, team, rosterInWeek, week, positio
     }
   }
   if (!maxPlayer) {
-    console.log("Did not find any players of position " + position + " on team " + team.owner + " for week " + week)
+  //   console.log("Did not find any players of position " + position + " on team " + team.owner + " for week " + week)
     return;
   }
-  console.log(maxPlayer.player.last_name + " had most points at position " + position + " with " +
-    maxPlayer.points + " points for team " + team.owner + " in week " + week)
+  // console.log(maxPlayer.player.last_name + " had most points at position " + position + " with " +
+  //   maxPlayer.points + " points for team " + team.owner + " in week " + week)
   team.subtractFromMaxPf(maxPlayer.points)
 }
 

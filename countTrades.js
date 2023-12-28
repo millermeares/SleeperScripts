@@ -22,6 +22,7 @@ async function countTradesForLeague(leagueId) {
   let tradeCount = 0
   for (let i = 0; i <= end; i++) {
     const trades = await getTradesForWeek(leagueId, i)
+    console.log(trades)
     tradeCount += trades.length
   }  
   return tradeCount
