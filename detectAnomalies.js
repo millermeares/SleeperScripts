@@ -32,6 +32,7 @@ async function detectAnomalyInWeek(leagueId, players, teams, week) {
     let team = teams.filter(team => team.rosterId === rosterInWeek.roster_id)[0];
     requiredPositions.forEach(position => {
       const scorerCount = countNonZeroScorersFromPosition(players, team, rosterInWeek, position)
+      // i could actually detect *invalid* lineups if I could determine whether a player was active in a certain week.
       if (scorerCount < MIN_EXPECTED_SCORERS[position]) {
         const msg = `Only ${scorerCount} ${position} scored non-zero points on ${team.owner} team in week ${week}`
         console.log(`Anomaly: ${msg}`)

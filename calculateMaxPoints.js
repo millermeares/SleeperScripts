@@ -1,8 +1,7 @@
 import axios from 'axios';
 import playerProvider from './playerProvider.js';
 import Players from './Players.js';
-import Team from './Team.js';
-import { getTeamsWithMaxPf } from './Team.js';
+import Team, { getTeamsWithMaxPf } from './Team.js';
 import { getLatestBanInjuriesLeagueId, leagueUrl } from './league.js';
 const WEEK_AMOUNT = 14; // don't count playoffs.
 
@@ -29,8 +28,9 @@ function removeMaxOfPositionFromScores(players, teams, weekMatchups, week, posit
 
 function removeMaxOfPositionFromScore(players, team, rosterInWeek, week, position) {
   let maxPlayer;
+  // todo: would liek to eliminate byes from this calculation to avoid a bye overshadowing a negative player.
+  // super edge case, so not a huge deal.
   for (let i = 0; i < rosterInWeek.players.length; i++) {
-    // need to figure out how many points a player scored in a week... that's not easy is it.
     let player = players.getPlayer(rosterInWeek.players[i])
     if(!player.fantasy_positions.includes(position)) {
       continue;
@@ -47,8 +47,13 @@ function removeMaxOfPositionFromScore(players, team, rosterInWeek, week, positio
     console.log("Did not find any players of position " + position + " on team " + team.owner + " for week " + week)
     return;
   }
-  console.log(maxPlayer.player.last_name + " had most points at position " + position + " with " +
-    maxPlayer.points + " points for team " + team.owner + " in week " + week)
+  if (maxPlayer.points < 0) {
+    console.log(`Not subtracting points for ${maxPlayer.player.last_name} due to them having` + 
+      ` negative (${maxPlayer.points}) for team ${team.owner} in week ${week}`)
+    return;
+  }
+  console.log(`${maxPlayer.player.last_name} had most points at ${position} with ${maxPlayer.points} points ` + 
+    `for team ${team.owner} in week ${week}`)
   team.subtractFromMaxPf(maxPlayer.points)
 }
 

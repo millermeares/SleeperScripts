@@ -5,11 +5,9 @@ const millerUserId = "459457205712711680"
 export async function getLatestBanInjuriesLeagueId() {
   const currentYear = new Date(Date.now()).getFullYear()
   let currentSeason = await getAllLeaguesForUserForSeason(millerUserId, currentYear)
-  console.log(currentSeason)
   if (currentSeason.length == 0) {
     currentSeason = await getAllLeaguesForUserForSeason(millerUserId, currentYear-1)
   }
-  console.log(currentSeason)
   for(let i = 0; i < currentSeason.length; i++) {
     const league = currentSeason[i]
     if (league.name == "Ban Injuries") {
