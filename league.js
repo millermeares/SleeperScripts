@@ -23,3 +23,7 @@ async function getAllLeaguesForUserForSeason(userId, season) {
   const allLeaguesUrl = `https://api.sleeper.app/v1/user/${userId}/leagues/nfl/${season}`
   return (await axios.get(allLeaguesUrl)).data;
 }
+
+export function leagueUrl(leagueId) {
+  return "https://api.sleeper.app/v1/league/" + leagueId;
+}

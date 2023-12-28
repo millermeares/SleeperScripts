@@ -2,8 +2,9 @@ import axios from 'axios';
 import playerProvider from './playerProvider.js';
 import Players from './Players.js';
 import Team from './Team.js';
-import { getLatestBanInjuriesLeagueId } from './league.js';
-const WEEK_AMOUNT = 17;
+import { getTeamsWithMaxPf } from './Team.js';
+import { getLatestBanInjuriesLeagueId, leagueUrl } from './league.js';
+const WEEK_AMOUNT = 14; // don't count playoffs.
 
 export async function removeKickerAndDefense() {
   const banInjuriesLeagueId = await getLatestBanInjuriesLeagueId()
@@ -55,30 +56,7 @@ function getPlayerPointsInWeek(player, rosterInWeek) {
   return rosterInWeek.players_points[player.player_id]
 }
 
-async function getTeamsWithMaxPf(leagueId) {
-  let users = await getUsersInLeague(leagueId);
-  const rostersUrl = leagueUrl(leagueId) + "/rosters";
 
-  return (await axios.get(rostersUrl)).data.map(team => {
-    team.owner = users.filter(user => user.id === team.owner_id)[0].username
-    return Team.prototype.revive(team);
-  });
-}
-
-function leagueUrl(leagueId) {
-  return "https://api.sleeper.app/v1/league/" + leagueId;
-}
-
-async function getUsersInLeague(leagueId) {
-  const leagueUsersUrl = leagueUrl(leagueId) + "/users"
-  let users = (await axios.get(leagueUsersUrl)).data;
-  return users.map(user => {
-    return {
-      username: user.display_name,
-      id: user.user_id
-    }
-  })
-}
 
 async function getMatchUp(leagueId, week) {
   return (await axios.get(getMatchUpUrl(leagueId, week))).data;

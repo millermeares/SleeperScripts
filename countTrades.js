@@ -13,7 +13,6 @@ async function countTrades() {
 
 async function countTradesForLeague(leagueId) {
   const league = await getLeague(leagueId)
-  // todo: log legs? 
   const playoffWeek = league.settings.playoff_week_start
   const start = 1
   const end = playoffWeek + 2
