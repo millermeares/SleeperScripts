@@ -2,22 +2,15 @@ import axios from 'axios';
 import playerProvider from './playerProvider.js';
 import Players from './Players.js';
 import Team from './Team.js';
-
-const leagueId = "784442047112327168"; //todo: going to need to change league ID.
-// todo: going to need to dynamically pull playersUrl based on what year this is running for.
-const leagueUrl = "https://api.sleeper.app/v1/league/" + leagueId;
-const matchUpUrl = leagueUrl + "/matchups/";
-const leagueUsersUrl = leagueUrl + "/users";
-const rostersUrl = leagueUrl + "/rosters";
-const playersUrl = "https://api.sleeper.app/v1/players/nfl";
-
+import { getLatestBanInjuriesLeagueId } from './league.js';
 const WEEK_AMOUNT = 17;
 
 export async function removeKickerAndDefense() {
+  const banInjuriesLeagueId = await getLatestBanInjuriesLeagueId()
   let players = new Players(await playerProvider.getPlayers());
-  let teams = await getTeamsWithMaxPf();
+  let teams = await getTeamsWithMaxPf(banInjuriesLeagueId);
   for (let week = 1; week <= WEEK_AMOUNT; week++) {
-    let weekMatchups = await getMatchUp(week);
+    let weekMatchups = await getMatchUp(banInjuriesLeagueId, week);
     removeMaxOfPositionFromScores(players, teams, weekMatchups, week, "DEF");
     removeMaxOfPositionFromScores(players, teams, weekMatchups, week, "K");
   }
@@ -50,11 +43,11 @@ function removeMaxOfPositionFromScore(players, team, rosterInWeek, week, positio
     }
   }
   if (!maxPlayer) {
-  //   console.log("Did not find any players of position " + position + " on team " + team.owner + " for week " + week)
+    console.log("Did not find any players of position " + position + " on team " + team.owner + " for week " + week)
     return;
   }
-  // console.log(maxPlayer.player.last_name + " had most points at position " + position + " with " +
-  //   maxPlayer.points + " points for team " + team.owner + " in week " + week)
+  console.log(maxPlayer.player.last_name + " had most points at position " + position + " with " +
+    maxPlayer.points + " points for team " + team.owner + " in week " + week)
   team.subtractFromMaxPf(maxPlayer.points)
 }
 
@@ -62,15 +55,22 @@ function getPlayerPointsInWeek(player, rosterInWeek) {
   return rosterInWeek.players_points[player.player_id]
 }
 
-async function getTeamsWithMaxPf() {
-  let users = await getUsersInLeague();
+async function getTeamsWithMaxPf(leagueId) {
+  let users = await getUsersInLeague(leagueId);
+  const rostersUrl = leagueUrl(leagueId) + "/rosters";
+
   return (await axios.get(rostersUrl)).data.map(team => {
     team.owner = users.filter(user => user.id === team.owner_id)[0].username
     return Team.prototype.revive(team);
   });
 }
 
-async function getUsersInLeague() {
+function leagueUrl(leagueId) {
+  return "https://api.sleeper.app/v1/league/" + leagueId;
+}
+
+async function getUsersInLeague(leagueId) {
+  const leagueUsersUrl = leagueUrl(leagueId) + "/users"
   let users = (await axios.get(leagueUsersUrl)).data;
   return users.map(user => {
     return {
@@ -80,12 +80,12 @@ async function getUsersInLeague() {
   })
 }
 
-async function getMatchUp(week) {
-  return (await axios.get(getMatchUpUrl(week))).data;
+async function getMatchUp(leagueId, week) {
+  return (await axios.get(getMatchUpUrl(leagueId, week))).data;
 }
 
-function getMatchUpUrl(week) {
-  return matchUpUrl + week;
+function getMatchUpUrl(leagueId, week) {
+  return leagueUrl(leagueId) + "/matchups/" + week
 }
 
 removeKickerAndDefense()

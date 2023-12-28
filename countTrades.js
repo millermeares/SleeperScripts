@@ -35,6 +35,7 @@ async function getTradesForWeek(leagueId, week) {
 }
 
 async function getLeaguesByYear() {
+  const latestLeagueId = await getLatestBanInjuriesLeagueId()
   let currentLeague = await getLeague(latestLeagueId)
   const record = [{leagueId: currentLeague.league_id, season: currentLeague.season}]
   while (currentLeague.previous_league_id) {
@@ -48,7 +49,5 @@ async function getLeague(leagueId) {
   const leagueUrl = "https://api.sleeper.app/v1/league/" + leagueId;
   return (await axios.get(leagueUrl)).data;
 }
-
-
 
 countTrades()
