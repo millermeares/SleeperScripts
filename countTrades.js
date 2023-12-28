@@ -1,6 +1,5 @@
 import axios from 'axios';
-
-const latestLeagueId = "920114615076380672" //todo: automate this
+import { getLatestBanInjuriesLeagueId } from './league.js';
 
 async function countTrades() {
   const leagues = await getLeaguesByYear()
