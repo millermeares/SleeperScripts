@@ -7,6 +7,7 @@ const WEEK_AMOUNT = 14; // don't count playoffs.
 
 export async function removeKickerAndDefense() {
   const banInjuriesLeagueId = await getLatestBanInjuriesLeagueId()
+  console.log(`Ban injuries id: ${banInjuriesLeagueId}`)
   let players = new Players(await playerProvider.getPlayers());
   let teams = await getTeamsWithMaxPf(banInjuriesLeagueId);
   for (let week = 1; week <= WEEK_AMOUNT; week++) {
@@ -15,7 +16,14 @@ export async function removeKickerAndDefense() {
     removeMaxOfPositionFromScores(players, teams, weekMatchups, week, "K");
   }
   teams.sort((a, b) => a.maxPf - b.maxPf);
-  console.log(teams);
+  printTeams(teams)
+}
+
+function printTeams(teams) {
+  console.log("Max PF Current Standings:");
+  teams.forEach((team, i) => {
+    console.log(`${i+1}: ${team.owner} (${team.maxPf})`)
+  })
 }
 
 function removeMaxOfPositionFromScores(players, teams, weekMatchups, week, position) {

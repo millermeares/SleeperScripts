@@ -3,11 +3,13 @@ import axios from 'axios'
 const millerUserId = "459457205712711680"
 
 export async function getLatestBanInjuriesLeagueId() {
-  const currentYear = new Date(Date.now()).getFullYear()
-  let currentSeason = await getAllLeaguesForUserForSeason(millerUserId, currentYear)
+  let seasonYear = new Date(Date.now()).getFullYear()
+  let currentSeason = await getAllLeaguesForUserForSeason(millerUserId, seasonYear)
   if (currentSeason.length == 0) {
-    currentSeason = await getAllLeaguesForUserForSeason(millerUserId, currentYear-1)
+    seasonYear = seasonYear - 1
+    currentSeason = await getAllLeaguesForUserForSeason(millerUserId, seasonYear)
   }
+  console.log(`Using leagues from year ${seasonYear}.`)
   for(let i = 0; i < currentSeason.length; i++) {
     const league = currentSeason[i]
     if (league.name == "Ban Injuries") {
